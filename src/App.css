@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+
+.categoriesList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.categoryCard {
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 20px;
+  width: 20%;
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.categoryCard img {
+  width: 100%;
+  height: auto;
+}
