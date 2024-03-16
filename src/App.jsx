@@ -1,16 +1,22 @@
 import './App.css'
 import CategoriesList from './components/CategoriesList';
+import MealList from './components/MealList';
+import Home from './components/Home';
+import { Route, Switch } from "react-router-dom";
+
 
 function App() {
   return (
     <div className="container">
-      <h1>Jiak Simi?</h1>
-      <h2>Dunno what to eat?</h2>
-      <p>Choose a category to start!</p>
-      <CategoriesList />
-      <h2>Huh? So mafan</h2>
-      <p>Lazy to think? Nevermind, can click below.</p>
-      <button>Give me a random meal!</button>
+      <Switch>
+        <Route path="/catogories/:category">
+          <MealList />
+        </Route>
+        
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Meal from './Meal'
 
-function Category() {
+function MealCard() {
   return (
     <ul>
         <li><Meal /></li>
@@ -9,4 +9,4 @@ function Category() {
   )
 }
 
-export default Category;
+export default MealCard;

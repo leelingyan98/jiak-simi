@@ -1,10 +1,11 @@
-import React from 'react'
-import Category from './Category'
+import React from 'react';
+import { Link } from "react-router-dom";
 
 function CategoryCard(props) {
   return (
     <div className="categoryCard">
-        <img src={props.image} />{props.label}
+        <img src={props.image} />
+        <Link to={"/categories/" + props.label}>{props.label}</Link>
     </div>
   )
 }
