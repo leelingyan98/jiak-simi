@@ -6,7 +6,8 @@ function CategoriesList() {
   const [categories, setCategories] = useState('');
 
   useEffect(() => {
-    const mealdbURL = import.meta.env.VITE_MEALDB_URL;
+    // const mealdbURL = import.meta.env.VITE_MEALDB_URL; // Local
+    const mealdbURL = process.env.VITE_MEALDB_URL; // Deployment
 
     async function fetchCategories() {
       const response = await fetch(`${mealdbURL}/categories.php`);
