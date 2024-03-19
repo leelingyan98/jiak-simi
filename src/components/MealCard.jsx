@@ -1,11 +1,12 @@
-import React from 'react'
-import Meal from './Meal'
+import React from 'react';
+import { Link } from "react-router-dom";
 
-function MealCard() {
+function MealCard(props) {
   return (
-    <ul>
-        <li><Meal /></li>
-    </ul>
+    <div className="categoryCard">
+        <img src={props.image} />
+        <Link to={`${props.category}/${props.id}`}>{props.label}</Link>
+    </div>
   )
 }
 
