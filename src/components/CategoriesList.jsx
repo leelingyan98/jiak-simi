@@ -34,6 +34,7 @@ function CategoriesList() {
   } else {
     return (
       <div>
+        <button onClick={() => history.goBack()}>Go back</button>
         <p>Loading...</p>
       </div>
     )

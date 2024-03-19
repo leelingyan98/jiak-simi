@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import MealCard from './MealCard'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 
 function CategoryList() {
   const [categoryMeals, setCategoryMeals] = useState('');
   const { category } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     const mealdbURL = import.meta.env.VITE_MEALDB_URL;
@@ -15,12 +16,12 @@ function CategoryList() {
       setCategoryMeals(jsonData.meals);
     }
     fetchCategoryMeals();
-  }, []);
+  }, [category]);
   
   if (categoryMeals.length > 0) {
     return (
       <div className="categoriesList">
-        <Link to={"/"}>Go home</Link>
+        <button onClick={() => history.goBack()}>Go back</button>
         <h1>{category}</h1>
         {categoryMeals.map(meal => {
           return(
