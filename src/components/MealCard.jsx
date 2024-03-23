@@ -5,7 +5,7 @@ function MealCard(props) {
   return (
     <div className="categoryCard">
         <img src={props.image} />
-        <Link to={`${props.category}/${props.id}`}>{props.label}</Link>
+        <Link to={`/categories/${props.category}/${props.id}`}>{props.label}</Link>
     </div>
   )
 }

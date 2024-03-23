@@ -19,6 +19,7 @@ function CategoriesList() {
   if (categories.length > 0) {
     return (
       <div className="categoriesList">
+        <h1>Categories</h1>
         {categories.map(category => {
           return(
             <CategoryCard
@@ -35,6 +36,7 @@ function CategoriesList() {
     return (
       <div>
         <button onClick={() => history.goBack()}>Go back</button>
+        <h1>Categories</h1>
         <p>Loading...</p>
       </div>
     )
