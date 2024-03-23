@@ -20,20 +20,24 @@ function CategoryList() {
   
   if (categoryMeals.length > 0) {
     return (
-      <div className="categoriesList">
+      <div>
         <button onClick={() => history.goBack()}>Go back</button>
         <h1>{category}</h1>
-        {categoryMeals.map(meal => {
-          return(
-            <MealCard
-              key={meal.idMeal}
-              label={meal.strMeal}
-              image={meal.strMealThumb}
-              id={meal.idMeal}
-              category={category}
-            />
-          )
-        })}
+        <ul className="categoriesList">
+          {categoryMeals.map(meal => {
+            return (
+              <li>
+                <MealCard
+                  key={meal.idMeal}
+                  label={meal.strMeal}
+                  image={meal.strMealThumb}
+                  id={meal.idMeal}
+                  category={category}
+                />
+              </li>
+            )
+          })}
+        </ul>
       </div>
     )
   } else {

@@ -3,6 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 
 function Meal() {
   const [mealData, setMealData] = useState('');
+  const [ingredients, setIngredients] = useState([]);
   const [addMeal, handleAddMeal] = useState('');
   const { category, mealid } = useParams();
   const history = useHistory();
@@ -17,7 +18,6 @@ function Meal() {
       setMealData(jsonData.meals[0])
     }
     fetchMeal();
-    console.log(mealData);
   }, [mealid]);
 
   function handleSaveMeal() {

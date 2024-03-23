@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
-import React from 'react'
-import CategoryCard from './CategoryCard'
+import { useState, useEffect } from 'react';
+import React from 'react';
+import CategoryCard from './CategoryCard';
+import { Link } from "react-router-dom";
 
 function CategoriesList() {
   const [categories, setCategories] = useState('');
@@ -18,18 +19,22 @@ function CategoriesList() {
 
   if (categories.length > 0) {
     return (
-      <div className="categoriesList">
+      <div>
         <h1>Categories</h1>
-        {categories.map(category => {
-          return(
-            <CategoryCard
-              key={category.idCategory}
-              label={category.strCategory}
-              image={category.strCategoryThumb}
-              desc={category.strCategoryDescription}
-            />
-          )
-        })}
+        <ul className="categoriesList">
+          {categories.map(category => {
+            return(
+              <li>
+                <CategoryCard
+                  key={category.idCategory}
+                  label={category.strCategory}
+                  image={category.strCategoryThumb}
+                  desc={category.strCategoryDescription}
+                />
+              </li>
+            )
+          })}
+        </ul>
       </div>
     )
   } else {

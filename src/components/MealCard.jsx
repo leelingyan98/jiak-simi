@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 
 function MealCard(props) {
   return (
-    <div className="categoryCard">
-        <img src={props.image} />
-        <Link to={`/categories/${props.category}/${props.id}`}>{props.label}</Link>
+    <div>
+        <Link to={`/categories/${props.category}/${props.id}`}>
+          <div className="categoryCard">
+            <img src={props.image} />
+            {props.label}
+          </div>
+        </Link>
     </div>
   )
 }
