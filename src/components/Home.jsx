@@ -9,7 +9,7 @@ function Home() {
         <Link to={"/categories"}><button>Start here!</button></Link>
         <h2>Huh? So mafan</h2>
         <p>Lazy to think? Nevermind, can click below.</p>
-        <button>Give me a random meal!</button>
+        <Link to={"/random"}><button>Give me a random meal!</button></Link>
     </div>
   )
 }

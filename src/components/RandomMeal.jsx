@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom';
 
-function Meal() {
+function RandomMeal() {
   const [mealData, setMealData] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [addMeal, handleAddMeal] = useState('');
-  const { category, mealid } = useParams();
   const history = useHistory();
   const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
+  const mealdbURL = import.meta.env.VITE_MEALDB_URL;
+
+  async function fetchRandomMeal() {
+    const response = await fetch(`${mealdbURL}/random.php`);
+    const jsonData = await response.json();
+    const instructionsArr = await jsonData.meals[0].strInstructions.split("\r\n");
+    setMealData({...jsonData.meals[0], instructions: instructionsArr})
+    console.log(mealData)
+  }
 
   useEffect(() => {
-    const mealdbURL = import.meta.env.VITE_MEALDB_URL;
-
-    async function fetchMeal() {
-      const response = await fetch(`${mealdbURL}/lookup.php?i=${mealid}`);
-      const jsonData = await response.json();
-      const instructionsArr = await jsonData.meals[0].strInstructions.split("\r\n");
-      setMealData({...jsonData.meals[0], instructions: instructionsArr})
-      console.log(mealData)
-    }
-    fetchMeal();
-  }, [mealid]);
+    fetchRandomMeal();
+  }, []);
 
   useEffect(() => {
     function getIngredients(obj) {
@@ -81,6 +80,7 @@ function Meal() {
     <div>
       <button onClick={() => history.goBack()}>Go back</button>
       <button onClick={() => handleSaveMeal()}>Save meal!</button>
+      <button onClick={() => fetchRandomMeal()}>Give me another meal</button>
       <h1>{mealData.strMeal}</h1>
       <hr />
       <div className="mealDisplay">
@@ -114,11 +114,10 @@ function Meal() {
             })
             : null
           }
-          <p>Tags: {mealData.strTags}</p>
         </div>
       </div>
     </div>
   )
 }
 
-export default Meal;
+export default RandomMeal;

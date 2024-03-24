@@ -4,6 +4,7 @@ import NavBar from './components/NavBar';
 import CategoriesList from './components/CategoriesList';
 import CategoryList from './components/CategoryList';
 import Meal from './components/Meal';
+import RandomMeal from './components/RandomMeal';
 import SavedMealsList from './components/SavedMealsList';
 import { Route, Switch } from "react-router-dom";
 
@@ -26,6 +27,10 @@ function App() {
 
         <Route path="/saved">
           <SavedMealsList />
+        </Route>
+
+        <Route path="/random">
+          <RandomMeal />
         </Route>
         
         <Route path="/">
