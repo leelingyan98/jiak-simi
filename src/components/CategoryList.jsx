@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import MealCard from './MealCard'
+import CategoriesList from './CategoriesList';
 import { Link, useParams, useHistory } from 'react-router-dom';
 
 function CategoryList() {
@@ -26,9 +27,8 @@ function CategoryList() {
         <ul className="categoriesList">
           {categoryMeals.map(meal => {
             return (
-              <li>
+              <li key={meal.idMeal}>
                 <MealCard
-                  key={meal.idMeal}
                   label={meal.strMeal}
                   image={meal.strMealThumb}
                   id={meal.idMeal}
@@ -43,6 +43,7 @@ function CategoryList() {
   } else {
     return (
       <div>
+        <CategoriesList />
         <Link to={"/"}>Go home</Link>
         <p>Loading...</p>
       </div>

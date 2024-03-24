@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
 import CategoryCard from './CategoryCard';
-import { Link } from "react-router-dom";
 
 function CategoriesList() {
   const [categories, setCategories] = useState('');
@@ -24,9 +23,8 @@ function CategoriesList() {
         <ul className="categoriesList">
           {categories.map(category => {
             return(
-              <li>
+              <li key={category.idCategory}>
                 <CategoryCard
-                  key={category.idCategory}
                   label={category.strCategory}
                   image={category.strCategoryThumb}
                   desc={category.strCategoryDescription}

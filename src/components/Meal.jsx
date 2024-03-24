@@ -16,9 +16,34 @@ function Meal() {
       const response = await fetch(`${mealdbURL}/lookup.php?i=${mealid}`);
       const jsonData = await response.json();
       setMealData(jsonData.meals[0])
+      console.log(mealData)
     }
     fetchMeal();
   }, [mealid]);
+
+  useEffect(() => {
+    function getIngredients(obj) {
+      const ingredientsList = [];
+      
+      // Loop through the keys of the object
+      for (let i = 1; i <= 20; i++) { // Assuming there are 20 possible ingredients and measures
+        const ingredientKey = `strIngredient${i}`;
+        const measureKey = `strMeasure${i}`;
+        
+        // Check if both ingredientKey and measureKey exist and their values are not empty
+        if (Object.hasOwn(obj, ingredientKey) && Object.hasOwn(obj, measureKey) && obj[ingredientKey] && obj[measureKey]) {
+          const ingredientObject = {
+            strIngredient: obj[ingredientKey],
+            strMeasure: obj[measureKey]
+          };
+          ingredientsList.push(ingredientObject);
+        }
+      }
+      setIngredients(ingredientsList);
+      console.log(ingredientsList);
+    }
+    getIngredients(mealData);
+  }, [mealData])
 
   function handleSaveMeal() {
     // We make a POST call to the server with the data
@@ -55,21 +80,31 @@ function Meal() {
   return (
     <div>
       <button onClick={() => history.goBack()}>Go back</button>
-      <div>
-        <img src={mealData.strMealThumb}></img>
-      </div>
-      <div>
-        <h2>{mealData.strMeal}</h2>
-      </div>
       <button onClick={() => handleSaveMeal()}>Save meal!</button>
-      <p>Meal ID: {mealData.idMeal}</p>
-      <p>Area: {mealData.strArea}</p>
-      <p>Category: {mealData.strCategory}</p>
-      <p>Instructions: {mealData.strInstructions}</p>
-      <p>Source: {mealData.strSource}</p>
-      <p>Tags: {mealData.strTags}</p>
-      <p>{mealData.strYoutube}</p>
-      <p>Youtube: {mealData.strYoutube}</p>
+      <h1>{mealData.strMeal}</h1>
+      <hr />
+      <div className="mealDisplay">
+        <div className="mealPhoto">
+          <img src={mealData.strMealThumb}></img>
+          <p>Category: {mealData.strCategory}</p>
+          <p>Area: {mealData.strArea}</p>
+        </div>
+        <div className="mealInfo">
+          <h2>Ingredients</h2>
+          <ul className="ingredients">
+          {ingredients.map(ingredient => {
+            return (
+              <li>{ingredient.strMeasure} {ingredient.strIngredient}</li>
+            )
+          })}
+          </ul>
+          <h2>Instructions</h2>
+          <p>{mealData.strInstructions}</p>
+          <p>Source: {mealData.strSource}</p>
+          <p>Tags: {mealData.strTags}</p>
+          <p>Youtube: {mealData.strYoutube}</p>
+        </div>
+      </div>
     </div>
   )
 }
