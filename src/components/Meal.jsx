@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom';
 
-function Meal() {
+function Meal(props) {
+  const { savedMeals } = props;
   const [mealData, setMealData] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [addMeal, handleAddMeal] = useState('');
@@ -17,7 +18,6 @@ function Meal() {
       const jsonData = await response.json();
       const instructionsArr = await jsonData.meals[0].strInstructions.split("\r\n");
       setMealData({...jsonData.meals[0], instructions: instructionsArr})
-      console.log(mealData)
     }
     fetchMeal();
   }, [mealid]);
@@ -74,7 +74,26 @@ function Meal() {
         console.log('Error saving meal!')   
       }
     }
-    saveMeal();
+
+    // Check if meal is saved before adding to list
+    function checkSavedMeals() {
+      const savedMealsIds = [];
+
+      savedMeals.forEach(savedMeal => {
+        const savedMealId = savedMeal.fields.idMeal;
+        savedMealsIds.push(savedMealId);
+      });
+
+      const mealExists = savedMealsIds.includes(mealid);
+
+      if (!mealExists) {
+        saveMeal();
+        console.log('saved!')
+      } else {
+        console.log('sorry, meal added')
+      }
+    }
+    checkSavedMeals();
   };
 
   return (
@@ -114,7 +133,6 @@ function Meal() {
             })
             : null
           }
-          <p>Tags: {mealData.strTags}</p>
         </div>
       </div>
     </div>
