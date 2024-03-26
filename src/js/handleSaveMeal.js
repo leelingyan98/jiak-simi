@@ -1,6 +1,6 @@
-import { getSavedMeals } from "./getSavedMeals";
+function handleSaveMeal() {
+  getSavedMeals();
 
-export function handleSaveMeal(mealName, mealId) {
   // We make a POST call to the server with the data
   async function saveMeal() {
     try {
@@ -14,8 +14,8 @@ export function handleSaveMeal(mealName, mealId) {
           "records": [
             {
                 "fields": {
-                  "Name": mealName,
-                  "idMeal": mealId,
+                  "Name": mealData.strMeal,
+                  "idMeal": mealData.idMeal,
                 },
             }
           ]
@@ -30,17 +30,13 @@ export function handleSaveMeal(mealName, mealId) {
   }
 
   // Check if meal is saved before adding to list
-  function checkSavedMeals() {
-    getSavedMealsIds();
-    const mealExists = savedMealsIds.includes(mealid);
-
-    if (!mealExists) {
-      saveMeal();
-      getSavedMeals();
-      console.log('saved!')
-    } else {
-      console.log('sorry, meal added')
-    }
+  if (!mealSaved) {
+    console.log('Attempting to save meal..');
+    saveMeal();
+    getSavedMeals();
+    setMealSaved(true);
+  } else {
+    setMealSaved(false);
+    console.log('sorry, meal added');
   }
-  checkSavedMeals();
 };

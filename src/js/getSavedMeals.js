@@ -1,18 +1,6 @@
-// Compile meal IDs into a single array, so that we can use .includes() method
-export function getSavedMealsIds(savedMealsArr) {
-  const savedMealsIds = [];
-
-  savedMealsArr.forEach(savedMeal => {
-    const savedMealId = savedMeal.fields.idMeal;
-    savedMealsIds.push(savedMealId);
-  });
-
-  setSavedMealsIds(savedMealsIds);
-  console.log('saved meal ids', savedMealsIds)
-}
-
 // Get saved meals from Airtable
-export async function getSavedMeals() {
+async function getSavedMeals() {
+  const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
   const response = await fetch(
     "https://api.airtable.com/v0/appwPOsf2rf3nLGY5/Saved?view=Grid%20view",
     {
@@ -25,12 +13,22 @@ export async function getSavedMeals() {
   );
   const jsonData = await response.json();
   setSavedMeals(jsonData.records);
-  console.log(jsonData.records);
 }
 
 // Fetch saved meals data from mealDB
-export async function fetchSavedMealsData(id) {
+async function fetchSavedMealsData(id) {
     const response = await fetch(`${mealdbURL}/lookup.php?i=${id}`);
     const jsonData = await response.json();
     setSavedMeals(...savedMeals, jsonData.meals);
+}
+
+// Check if current meal is saved
+function checkIfSavedMeal() {
+  const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
+
+  if (typeof mealRecord !== 'undefined' || typeof mealRecord !== undefined) {
+      setMealSaved(true);
+  } else {
+      setMealSaved(false);
+  }
 }

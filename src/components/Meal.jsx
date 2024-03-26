@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 function Meal(props) {
   const { savedMeals, getSavedMeals } = props;
-  const [savedMealsIds, setSavedMealsIds] = useState([]);
+  const [mealSaved, setMealSaved] = useState(false);
   const [mealData, setMealData] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const { category, mealid } = useParams();
   const history = useHistory();
   const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
-
-  function getSavedMealsIds() {
-    const savedMealsIds = [];
-
-    savedMeals.forEach(savedMeal => {
-      const savedMealId = savedMeal.fields.idMeal;
-      savedMealsIds.push(savedMealId);
-    });
-
-    setSavedMealsIds(savedMealsIds);
-    console.log('saved meal ids', savedMealsIds)
-  }
 
   useEffect(() => {
     const mealdbURL = import.meta.env.VITE_MEALDB_URL;
@@ -31,7 +19,14 @@ function Meal(props) {
       const instructionsArr = await jsonData.meals[0].strInstructions.split("\r\n");
       setMealData({...jsonData.meals[0], instructions: instructionsArr})
     }
+
     fetchMeal();
+
+    const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
+
+    if (typeof mealRecord !== undefined) {
+      setMealSaved(true);
+    }
   }, [mealid]);
 
   useEffect(() => {
@@ -55,11 +50,11 @@ function Meal(props) {
       setIngredients(ingredientsList);
     }
     getIngredients(mealData);
-
-    getSavedMealsIds();
   }, [mealData])
 
   function handleSaveMeal() {
+    getSavedMeals();
+
     // We make a POST call to the server with the data
     async function saveMeal() {
       try {
@@ -89,23 +84,19 @@ function Meal(props) {
     }
 
     // Check if meal is saved before adding to list
-    function checkSavedMeals() {
-      getSavedMealsIds();
-      const mealExists = savedMealsIds.includes(mealid);
-
-      if (!mealExists) {
-        saveMeal();
-        getSavedMeals();
-        getSavedMealsIds();
-        console.log('saved!')
-      } else {
-        console.log('sorry, meal added')
-      }
+    if (!mealSaved) {
+      console.log('Attempting to save meal..');
+      saveMeal();
+      getSavedMeals();
+      setMealSaved(true);
+    } else {
+      setMealSaved(false);
+      console.log('sorry, meal added');
     }
-    checkSavedMeals();
   };
 
   function handleDeleteMeal() {
+    getSavedMeals();
     // Get record ID by searching for the meal ID
     const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
 
@@ -126,14 +117,14 @@ function Meal(props) {
       }
     }
     deleteMeal();
+    setMealSaved(false);
     getSavedMeals();
-    getSavedMealsIds()
   };
 
   return (
     <div>
       <button onClick={() => history.goBack()}>Go back</button>
-      {savedMealsIds.includes(mealid)
+      {mealSaved
         ? <button onClick={() => handleDeleteMeal()}>Remove from saved</button>
         : <button onClick={() => handleSaveMeal()}>Save meal!</button>
       }

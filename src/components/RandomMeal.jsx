@@ -3,14 +3,16 @@ import { useHistory } from 'react-router-dom';
 
 function RandomMeal(props) {
     const { savedMeals, getSavedMeals } = props;
+    const [mealSaved, setMealSaved] = useState(false);
     const [mealData, setMealData] = useState('');
     const [ingredients, setIngredients] = useState([]);
-    const [addMeal, handleAddMeal] = useState('');
     const history = useHistory();
     const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
-    const mealdbURL = import.meta.env.VITE_MEALDB_URL;
+    
 
     async function fetchRandomMeal() {
+        const mealdbURL = import.meta.env.VITE_MEALDB_URL;
+
         const response = await fetch(`${mealdbURL}/random.php`);
         const jsonData = await response.json();
         const instructionsArr = await jsonData.meals[0].strInstructions.split("\r\n");
@@ -18,8 +20,19 @@ function RandomMeal(props) {
         console.log(mealData)
     }
 
+    function checkIfSavedMeal() {
+        const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
+
+        if (typeof mealRecord !== 'undefined') {
+            setMealSaved(true);
+        } else {
+            setMealSaved(false);
+        }
+    }
+
     useEffect(() => {
         fetchRandomMeal();
+        checkIfSavedMeal();
     }, []);
 
     useEffect(() => {
@@ -43,6 +56,7 @@ function RandomMeal(props) {
             setIngredients(ingredientsList);
         }
         getIngredients(mealData);
+        checkIfSavedMeal();
     }, [mealData])
 
     function handleSaveMeal() {
@@ -68,41 +82,57 @@ function RandomMeal(props) {
                 });
                 const jsonData = await response.json();
 
-                handleAddMeal(jsonData)
-                console.log('Meal saved!')
+                console.log('Meal saved!', jsonData)
             } catch (error) {
                 console.log('Error saving meal!')
             }
         }
        
         // Check if meal is saved before adding to list
-    function checkSavedMeals() {
-        const savedMealsIds = [];
-  
-        savedMeals.forEach(savedMeal => {
-          const savedMealId = savedMeal.fields.idMeal;
-          savedMealsIds.push(savedMealId);
-        });
-  
-        const mealExists = savedMealsIds.includes(mealData.idMeal);
-  
-        if (!mealExists) {
-          saveMeal();
-          getSavedMeals();
-          console.log('saved!')
+        if (!mealSaved) {
+            console.log('Attempting to save meal..');
+            saveMeal();
+            getSavedMeals();
+            setMealSaved(true);
         } else {
-          console.log('sorry, meal added')
+            setMealSaved(false);
+            console.log('sorry, meal added');
         }
-      }
-      checkSavedMeals();
     };
 
+    function handleDeleteMeal() {
+        getSavedMeals();
+        // Get record ID by searching for the meal ID
+        const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
     
+        // API Call to delete record
+        async function deleteMeal() {
+          try {
+            const response = await fetch(`https://api.airtable.com/v0/appwPOsf2rf3nLGY5/Saved/${mealRecord.id}`, {
+              method: "DELETE",
+              headers: {
+                "Authorization": `Bearer ${airTableApiKey}`
+              },
+            });
+            const jsonData = await response.json();
+    
+            console.log('Meal deleted!', jsonData)
+          } catch (error) {
+            console.log('Error deleting meal!')   
+          }
+        }
+        deleteMeal();
+        setMealSaved(false);
+        getSavedMeals();
+      };
 
     return (
         <div>
             <button onClick={() => history.goBack()}>Go back</button>
-            <button onClick={() => handleSaveMeal()}>Save meal!</button>
+            {mealSaved
+                ? <button onClick={() => handleDeleteMeal()}>Remove from saved</button>
+                : <button onClick={() => handleSaveMeal()}>Save meal!</button>
+            }
             <button onClick={() => fetchRandomMeal()}>Give me another meal</button>
             <h1>{mealData.strMeal}</h1>
             <hr />
