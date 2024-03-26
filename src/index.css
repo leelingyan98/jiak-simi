@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--black);
+  background-color: var(--grey);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -42,7 +42,6 @@ body {
   place-items: start center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--grey);
 }
 
 h1 {
@@ -58,9 +57,10 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #f9f9f9;
   cursor: pointer;
   transition: border-color 0.25s;
+  margin: 0 0.6em;
 }
 button:hover {
   border-color: #646cff;
@@ -127,10 +127,14 @@ img {
 .mealDisplay {
   display: flex;
   text-align: left;
+  padding: 0 20px;
 }
 
 .mealPhoto {
   width: 25%;
+  box-sizing: border-box;
+  text-align: center;
+  margin-top: 7px;
 }
 
 .mealInfo {
@@ -139,19 +143,43 @@ img {
   box-sizing: border-box;
 }
 
+.mealInfo h2:first-child {
+  margin-top: 0;
+}
+
 .ingredients {
   padding-left: 1em;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@media only screen and (max-width: 720px) {
+  .categoriesList li {
+    width: 40%;
   }
-  a:hover {
-    color: #747bff;
+
+  .mealDisplay {
+    flex-direction: column;
+    align-items: center;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .mealPhoto {
+    width: 75%;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .mealInfo {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .categoriesList li {
+    width: 80%;
+  }
+
+  .mealPhoto {
+    width: 100%;
   }
 }
