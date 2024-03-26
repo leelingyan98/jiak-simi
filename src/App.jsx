@@ -12,23 +12,24 @@ import React, { useState, useEffect } from 'react'
 function App() {
   const [savedMeals, setSavedMeals] = useState([]);
 
-  useEffect(() => {
+  const getSavedMeals = async function () {
     const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
+    const response = await fetch(
+      "https://api.airtable.com/v0/appwPOsf2rf3nLGY5/Saved?view=Grid%20view",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${airTableApiKey}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    setSavedMeals(jsonData.records);
+    console.log(jsonData.records);
+  }
 
-    async function getSavedMeals() {
-      const response = await fetch(
-        "https://api.airtable.com/v0/appwPOsf2rf3nLGY5/Saved?maxRecords=3&view=Grid%20view",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${airTableApiKey}`,
-          },
-        }
-      );
-      const jsonData = await response.json();
-      setSavedMeals(jsonData.records);
-    }
+  useEffect(() => {
     getSavedMeals();
   }, []);
 
@@ -37,7 +38,10 @@ function App() {
       <NavBar />
       <Switch>
         <Route path="/categories/:category/:mealid">
-          <Meal savedMeals={savedMeals} />
+          <Meal
+            savedMeals={savedMeals}
+            getSavedMeals={getSavedMeals}
+          />
         </Route>
 
         <Route path="/categories/:category">
@@ -53,7 +57,10 @@ function App() {
         </Route>
 
         <Route path="/random">
-          <RandomMeal savedMeals={savedMeals} />
+          <RandomMeal
+            savedMeals={savedMeals}
+            getSavedMeals={getSavedMeals}
+          />
         </Route>
         
         <Route path="/">

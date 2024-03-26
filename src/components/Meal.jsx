@@ -2,13 +2,25 @@ import React, { useState, useEffect } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom';
 
 function Meal(props) {
-  const { savedMeals } = props;
+  const { savedMeals, getSavedMeals } = props;
+  const [savedMealsIds, setSavedMealsIds] = useState([]);
   const [mealData, setMealData] = useState('');
   const [ingredients, setIngredients] = useState([]);
-  const [addMeal, handleAddMeal] = useState('');
   const { category, mealid } = useParams();
   const history = useHistory();
   const airTableApiKey = import.meta.env.VITE_AIRTABLE_API;
+
+  function getSavedMealsIds() {
+    const savedMealsIds = [];
+
+    savedMeals.forEach(savedMeal => {
+      const savedMealId = savedMeal.fields.idMeal;
+      savedMealsIds.push(savedMealId);
+    });
+
+    setSavedMealsIds(savedMealsIds);
+    console.log('saved meal ids', savedMealsIds)
+  }
 
   useEffect(() => {
     const mealdbURL = import.meta.env.VITE_MEALDB_URL;
@@ -43,6 +55,8 @@ function Meal(props) {
       setIngredients(ingredientsList);
     }
     getIngredients(mealData);
+
+    getSavedMealsIds();
   }, [mealData])
 
   function handleSaveMeal() {
@@ -68,8 +82,7 @@ function Meal(props) {
         });
         const jsonData = await response.json();
 
-        handleAddMeal(jsonData)
-        console.log('Meal saved!')
+        console.log('Meal saved!', jsonData)
       } catch (error) {
         console.log('Error saving meal!')   
       }
@@ -77,17 +90,13 @@ function Meal(props) {
 
     // Check if meal is saved before adding to list
     function checkSavedMeals() {
-      const savedMealsIds = [];
-
-      savedMeals.forEach(savedMeal => {
-        const savedMealId = savedMeal.fields.idMeal;
-        savedMealsIds.push(savedMealId);
-      });
-
+      getSavedMealsIds();
       const mealExists = savedMealsIds.includes(mealid);
 
       if (!mealExists) {
         saveMeal();
+        getSavedMeals();
+        getSavedMealsIds();
         console.log('saved!')
       } else {
         console.log('sorry, meal added')
@@ -96,10 +105,38 @@ function Meal(props) {
     checkSavedMeals();
   };
 
+  function handleDeleteMeal() {
+    // Get record ID by searching for the meal ID
+    const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
+
+    // API Call to delete record
+    async function deleteMeal() {
+      try {
+        const response = await fetch(`https://api.airtable.com/v0/appwPOsf2rf3nLGY5/Saved/${mealRecord.id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${airTableApiKey}`
+          },
+        });
+        const jsonData = await response.json();
+
+        console.log('Meal deleted!', jsonData)
+      } catch (error) {
+        console.log('Error deleting meal!')   
+      }
+    }
+    deleteMeal();
+    getSavedMeals();
+    getSavedMealsIds()
+  };
+
   return (
     <div>
       <button onClick={() => history.goBack()}>Go back</button>
-      <button onClick={() => handleSaveMeal()}>Save meal!</button>
+      {savedMealsIds.includes(mealid)
+        ? <button onClick={() => handleDeleteMeal()}>Remove from saved</button>
+        : <button onClick={() => handleSaveMeal()}>Save meal!</button>
+      }
       <h1>{mealData.strMeal}</h1>
       <hr />
       <div className="mealDisplay">

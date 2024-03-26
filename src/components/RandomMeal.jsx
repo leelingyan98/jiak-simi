@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 
 function RandomMeal(props) {
-    const { savedMeals } = props;
+    const { savedMeals, getSavedMeals } = props;
     const [mealData, setMealData] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [addMeal, handleAddMeal] = useState('');
@@ -74,8 +74,30 @@ function RandomMeal(props) {
                 console.log('Error saving meal!')
             }
         }
-        saveMeal();
+       
+        // Check if meal is saved before adding to list
+    function checkSavedMeals() {
+        const savedMealsIds = [];
+  
+        savedMeals.forEach(savedMeal => {
+          const savedMealId = savedMeal.fields.idMeal;
+          savedMealsIds.push(savedMealId);
+        });
+  
+        const mealExists = savedMealsIds.includes(mealData.idMeal);
+  
+        if (!mealExists) {
+          saveMeal();
+          getSavedMeals();
+          console.log('saved!')
+        } else {
+          console.log('sorry, meal added')
+        }
+      }
+      checkSavedMeals();
     };
+
+    
 
     return (
         <div>

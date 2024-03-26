@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import CategoryCard from './CategoryCard';
 
 function CategoriesList() {
   const [categories, setCategories] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     const mealdbURL = import.meta.env.VITE_MEALDB_URL;
@@ -19,6 +20,7 @@ function CategoriesList() {
   if (categories.length > 0) {
     return (
       <div>
+        <button onClick={() => history.goBack()}>Go back</button>
         <h1>Categories</h1>
         <ul className="categoriesList">
           {categories.map(category => {

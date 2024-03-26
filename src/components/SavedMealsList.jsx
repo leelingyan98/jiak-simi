@@ -16,7 +16,7 @@ function SavedMealsList(props) {
       return jsonData.meals[0];
     }
 
-    async function getSavedMeals() {
+    async function fetchSavedMeals() {
       if (savedMeals.length > 0 ) {
         const mealDataPromises = savedMeals.map(async (savedMeal) => {
           const mealId = savedMeal.fields.idMeal;
@@ -27,7 +27,7 @@ function SavedMealsList(props) {
         setSavedMealsData(mealDataArray);
       } 
     }
-    getSavedMeals();
+    fetchSavedMeals();
   }, []);
 
   if (savedMealsData.length > 0) {
