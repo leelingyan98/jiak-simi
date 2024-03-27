@@ -33,7 +33,6 @@ function CategoryList() {
                   image={meal.strMealThumb}
                   id={meal.idMeal}
                   category={category}
-                  mealData={[mealData, setMealData]}
                 />
               </li>
             )
