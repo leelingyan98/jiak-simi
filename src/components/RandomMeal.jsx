@@ -23,7 +23,7 @@ function RandomMeal(props) {
     function checkIfSavedMeal() {
         const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
 
-        if (typeof mealRecord !== 'undefined') {
+        if ((typeof mealRecord !== 'undefined') && (typeof mealRecord !== undefined)) {
             setMealSaved(true);
         } else {
             setMealSaved(false);
@@ -32,7 +32,7 @@ function RandomMeal(props) {
 
     useEffect(() => {
         fetchRandomMeal();
-        checkIfSavedMeal();
+        checkIfSavedMeal()
     }, []);
 
     useEffect(() => {
@@ -83,6 +83,7 @@ function RandomMeal(props) {
                 const jsonData = await response.json();
 
                 console.log('Meal saved!', jsonData)
+                setMealSaved(true);
             } catch (error) {
                 console.log('Error saving meal!')
             }
@@ -93,9 +94,7 @@ function RandomMeal(props) {
             console.log('Attempting to save meal..');
             saveMeal();
             getSavedMeals();
-            setMealSaved(true);
         } else {
-            setMealSaved(false);
             console.log('sorry, meal added');
         }
     };
@@ -117,12 +116,12 @@ function RandomMeal(props) {
             const jsonData = await response.json();
     
             console.log('Meal deleted!', jsonData)
+            setMealSaved(false);
           } catch (error) {
             console.log('Error deleting meal!')   
           }
         }
         deleteMeal();
-        setMealSaved(false);
         getSavedMeals();
       };
 

@@ -26,7 +26,7 @@ async function fetchSavedMealsData(id) {
 function checkIfSavedMeal() {
   const mealRecord = savedMeals.find((savedMeal) => savedMeal.fields.idMeal == mealData.idMeal);
 
-  if (typeof mealRecord !== 'undefined' || typeof mealRecord !== undefined) {
+  if ((typeof mealRecord !== 'undefined') && (typeof mealRecord !== undefined)) {
       setMealSaved(true);
   } else {
       setMealSaved(false);

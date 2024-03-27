@@ -57,13 +57,15 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  color: var(--black);
   background-color: #f9f9f9;
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 0 0.6em;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--mutedred);
+  background-color:var(--beige);
 }
 button:focus,
 button:focus-visible {
